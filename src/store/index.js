@@ -57,6 +57,14 @@ export default new Vuex.Store({
                 return { message: error.message };
             }
         },
+        async changePassword({commit}, {id, password}) {
+            try {
+                await api().patch(`/users/${id}/change-password`, {password: password});
+                return { message: "success" };
+            } catch (error) {
+                return { message: error.message };
+            }
+        },
         async deleteProduct({commit}, slug) {
             try {
                 await api().delete(`/products/${slug}/force`);

@@ -3,22 +3,8 @@
         <template v-slot:default>
             <thead>
                 <tr>
-                    <td>
-                        <div class="d-flex justify-content-between">
-                            <router-link :to="'/admin/user/addNew'"
-                                ><v-btn color="green darken-1"
-                                    >ADD NEW</v-btn
-                                ></router-link
-                            >
-                        </div>
-                    </td>
                     <td colspan="4">
                         <div class="d-inline-flex flex-row">
-                            <router-link :to="'/admin/users/trash'"
-                                ><v-btn color=""
-                                    >RECYCLE BIN</v-btn
-                                ></router-link
-                            >
                             <form
                                 class="d-flex ms-8"
                                 @submit.prevent="handleSearch"
@@ -44,6 +30,7 @@
                     <th class="text-center">Type</th>
                     <th class="text-center">Name</th>
                     <th class="text-center">Email</th>
+                    <th class="text-center">Phone Number</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -78,11 +65,51 @@
                     <td class="text-center">
                         <div>{{ user.email }}</div>
                     </td>
+                    <td class="text-center">
+                        <div
+                            v-if="
+                                (user.phoneNumber && user.phoneNumber != '') ||
+                                user.phoneNumber != null
+                            "
+                        >
+                            {{ user.phoneNumber }}
+                        </div>
+                        <div v-else>null</div>
+                    </td>
                     <th class="text-left">
                         <div>
-                            <router-link :to="'/admin/user/edit/' + user._id"
-                                ><v-btn color="blue">Change password</v-btn></router-link
+                            <v-dialog
+                                transition="dialog-top-transition"
+                                max-width="600"
                             >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        color="primary"
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        >Change password</v-btn
+                                    >
+                                </template>
+                                <template v-slot:default="dialog">
+                                    <v-card>
+                                        <v-toolbar color="primary" dark
+                                            >Change Password</v-toolbar
+                                        >
+                                        <v-card-text>
+                                            <v-text-field type="text" v-model="password" label="New Password *"
+                                            placeholder="Enter new password"></v-text-field>
+                                            <button class="btn btn-primary" @click="changePassword(user._id)">Save</button>
+                                        </v-card-text>
+                                        <v-card-actions class="justify-end">
+                                            <v-btn
+                                                text
+                                                @click="dialog.value = false"
+                                                >Close</v-btn
+                                            >
+                                        </v-card-actions>
+                                    </v-card>
+                                </template>
+                            </v-dialog>
                         </div>
                         <div>
                             <v-btn
@@ -95,52 +122,61 @@
                 </tr>
             </tbody>
             <tbody v-else>
-                <tr v-for="product in searchArray" :key="product.slug">
+                <tr v-for="user in searchArray" :key="user._id">
                     <td class="text-center">
-                        <img :src="product.gallery[0]" alt="" />
+                        <div>{{ user.typeAccount }}</div>
                     </td>
                     <td class="text-center">
-                        <div>
-                            <b>Name:</b> {{ product.name }} &nbsp; <b>ID:</b>
-                            {{ product._id }}
-                        </div>
-                        <div>
-                            <span
-                                ><b>Categories:</b>
-                                {{ product.categories.toString() }} &nbsp;</span
-                            >
-                            <span
-                                ><b>Color:</b>
-                                {{ product.color.toString() }} &nbsp;</span
-                            >
-                            <span v-show="product.sale == 0"
-                                ><b>Price:</b> ${{ product.price }} &nbsp;</span
-                            >
-                            <span v-show="product.sale > 0"
-                                ><b>Price:</b> from
-                                <del>${{ product.price }}</del> to ${{
-                                    product.price -
-                                    (product.price * product.sale) / 100
-                                }}
-                                &nbsp;</span
-                            >
-                            <span v-show="product.sale > 0"
-                                ><b>Sale:</b> {{ product.sale }}% &nbsp;</span
-                            >
-                            <span><b>Sold:</b> {{ product.sold }} &nbsp;</span>
-                            <span><b>Stock:</b> {{ product.stock }}</span>
-                        </div>
-                        <div>
-                            <b>Description:</b>
-                            <span v-html="product.description" />
-                        </div>
+                        <div>{{ user.name }}</div>
                     </td>
-                    <th class="text-center">
+                    <td class="text-center">
+                        <div>{{ user.email }}</div>
+                    </td>
+                    <td class="text-center">
+                        <div
+                            v-if="
+                                (user.phoneNumber && user.phoneNumber != '') ||
+                                user.phoneNumber != null
+                            "
+                        >
+                            {{ user.phoneNumber }}
+                        </div>
+                        <div v-else>null</div>
+                    </td>
+                    <th class="text-left">
                         <div>
-                            <router-link
-                                :to="'/admin/product/edit/' + product._id"
-                                ><v-btn color="blue">Edit</v-btn></router-link
+                            <v-dialog
+                                transition="dialog-top-transition"
+                                max-width="600"
                             >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        color="primary"
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        >Change password</v-btn
+                                    >
+                                </template>
+                                <template v-slot:default="dialog">
+                                    <v-card>
+                                        <v-toolbar color="primary" dark
+                                            >Opening from the top</v-toolbar
+                                        >
+                                        <v-card-text>
+                                            <div class="text-h2 pa-12">
+                                                Hello world!
+                                            </div>
+                                        </v-card-text>
+                                        <v-card-actions class="justify-end">
+                                            <v-btn
+                                                text
+                                                @click="dialog.value = false"
+                                                >Close</v-btn
+                                            >
+                                        </v-card-actions>
+                                    </v-card>
+                                </template>
+                            </v-dialog>
                         </div>
                         <div>
                             <v-btn
@@ -152,6 +188,7 @@
                     </th>
                 </tr>
             </tbody>
+            {{password}}
         </template>
     </v-simple-table>
 </template>
@@ -172,6 +209,7 @@ export default {
             search: "",
             searchArray: [],
             returnSearch: true,
+            password: '',
         };
     },
     methods: {
@@ -189,15 +227,10 @@ export default {
                 this.returnSearch = false;
             }
         },
-        deleteProduct(slug) {
-            if (
-                confirm(
-                    "Delete this product? This product will be moving to the recycle bin!"
-                )
-            ) {
-                this.$store.dispatch("trashProduct", slug);
-                this.$router.go(0);
-            }
+        changePassword(id) {
+            this.$store.dispatch("changePassword", {id: id, password: this.password});
+            alert("This user is updated!")
+            window.location.reload()
         },
     },
 };
