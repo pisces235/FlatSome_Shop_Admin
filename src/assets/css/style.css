@@ -1,0 +1,8 @@
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%
+  }
+  .sticky + .v-main {
+    padding-top: 102px;
+  }
