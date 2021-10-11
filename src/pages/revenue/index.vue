@@ -1,9 +1,14 @@
 <template>
     <div class="container-fluid">
         <h1 class="title-page text-center">Revenue Page</h1>
-        <p class="all-total">Total all time: ${{getTotal(getOrdersPaid()).toFixed(2)
-                                    .toString()
-                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}</p>
+        <p class="all-total">
+            Total all time: ${{
+                getTotal(getOrdersPaid())
+                    .toFixed(2)
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            }}
+        </p>
         <div class="contain-order">
             <label for="searchDate">Search by date(mm/dd/yyyy)</label>
             <input type="date" v-model="searchDate" id="searchDate" />
@@ -15,16 +20,24 @@
                 </tr>
                 <tr v-for="o in getRevenueByDate()" :key="o._id">
                     <td class="text-left">{{ o.date }}</td>
-                    <td class="text-right">${{ o.total.toFixed(2)
-                                    .toString()
-                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                    <td class="text-right">
+                        ${{
+                            o.total
+                                .toFixed(2)
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }}
+                    </td>
                 </tr>
                 <tr>
                     <th class="text-left">Total</th>
                     <th class="text-right">
-                        ${{ getTotal(getRevenueByDate()).toFixed(2)
-                                    .toString()
-                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+                        ${{
+                            getTotal(getRevenueByDate())
+                                .toFixed(2)
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }}
                     </th>
                 </tr>
             </table>
@@ -41,16 +54,24 @@
                 </tr>
                 <tr v-for="o in getRevenueByMonth()" :key="o._id">
                     <td class="text-left">{{ o.date }}</td>
-                    <td class="text-right">${{ o.total.toFixed(2)
-                                    .toString()
-                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                    <td class="text-right">
+                        ${{
+                            o.total
+                                .toFixed(2)
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }}
+                    </td>
                 </tr>
                 <tr>
                     <th class="text-left">Total</th>
                     <th class="text-right">
-                        ${{ getTotal(getRevenueByMonth()).toFixed(2)
-                                    .toString()
-                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+                        ${{
+                            getTotal(getRevenueByMonth())
+                                .toFixed(2)
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }}
                     </th>
                 </tr>
             </table>
@@ -58,7 +79,13 @@
 
         <div class="contain-order">
             <label for="searchYear">Search by year</label>
-            <input type="text" v-model="searchYear" id="searchYear" onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="4"/>
+            <input
+                type="text"
+                v-model="searchYear"
+                id="searchYear"
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                maxlength="4"
+            />
             <h5 class="text-center">Results</h5>
             <table>
                 <tr>
@@ -67,16 +94,24 @@
                 </tr>
                 <tr v-for="o in getRevenueByYear()" :key="o._id">
                     <td class="text-left">{{ o.date }}</td>
-                    <td class="text-right">${{ o.total.toFixed(2)
-                                    .toString()
-                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
+                    <td class="text-right">
+                        ${{
+                            o.total
+                                .toFixed(2)
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }}
+                    </td>
                 </tr>
                 <tr>
                     <th class="text-left">Total</th>
                     <th class="text-right">
-                        ${{ getTotal(getRevenueByYear()).toFixed(2)
-                                    .toString()
-                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+                        ${{
+                            getTotal(getRevenueByYear())
+                                .toFixed(2)
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }}
                     </th>
                 </tr>
             </table>
@@ -110,7 +145,7 @@ export default {
     methods: {
         getOrdersPaid() {
             let newOrders = [];
-            let orders = this.orders
+            let orders = this.orders;
             orders.forEach((order) => {
                 if (
                     order.email
@@ -122,8 +157,8 @@ export default {
                 }
             });
             newOrders.sort(function (a, b) {
-                let x = a.paymentDate;
-                let y = b.paymentDate;
+                let x = new Date(a.paymentDate);
+                let y = new Date(b.paymentDate);
                 if (x < y) {
                     return -1;
                 }
@@ -192,7 +227,7 @@ export default {
                         orders.push(o);
                     }
                 });
-                return orders;
+                return orders
             }
         },
         getRevenueByYear() {
