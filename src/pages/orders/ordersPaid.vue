@@ -103,38 +103,6 @@
                             </td>
                         </tr>
                     </table>
-                    <div class="contain-btn">
-                        <button
-                            class="btn btn-success bold"
-                            v-if="o.confirm == false"
-                            @click="confirmOrder(o)"
-                        >
-                            Confirm order
-                        </button>
-
-                        <div v-else class="c-green">
-                            This order is confirmed
-                        </div>
-
-                        <button
-                            class="btn btn-danger bold"
-                            @click="deleteOrder(o)"
-                            v-show="o.confirm == false"
-                        >
-                            Delete order
-                        </button>
-
-                        <button
-                            class="btn btn-dark right bold"
-                            v-if="o.payment == false"
-                            @click="confirmPayment(o)"
-                        >
-                            Confirm payment
-                        </button>
-                        <div v-else class="c-green text-right">
-                            Customer paid
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -211,38 +179,6 @@
                             </td>
                         </tr>
                     </table>
-                    <div class="contain-btn">
-                        <button
-                            class="btn btn-success bold"
-                            v-if="o.confirm == false"
-                            @click="confirmOrder(o)"
-                        >
-                            Confirm order
-                        </button>
-
-                        <div v-else class="c-green">
-                            This order is confirmed
-                        </div>
-
-                        <button
-                            class="btn btn-danger bold"
-                            @click="deleteOrder(o)"
-                            v-show="o.confirm == false"
-                        >
-                            Delete order
-                        </button>
-
-                        <button
-                            class="btn btn-dark right bold"
-                            v-if="o.payment == false"
-                            @click="confirmPayment(o)"
-                        >
-                            Confirm payment
-                        </button>
-                        <div v-else class="c-green text-right">
-                            Customer paid
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
