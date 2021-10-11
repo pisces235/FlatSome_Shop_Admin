@@ -188,7 +188,6 @@
                     </th>
                 </tr>
             </tbody>
-            {{password}}
         </template>
     </v-simple-table>
 </template>

@@ -1,8 +1,8 @@
 <template>
     <div class="container-fluid" v-if="orders.length > 0">
         <div class="contain-btn">
-            <a href="/orders-paid" class="btn btn-left btn-success"
-                >SEE ALL ORDERS(paid)</a
+            <a href="/orders" class="btn btn-success btn-left"
+                >BACK TO ALL ORDERS(paid)</a
             >
             <v-text-field
                 type="text"
@@ -10,116 +10,248 @@
                 label="Search by email"
                 placeholder="Enter an email"
                 v-model="search"
+                @change="handleSearch()"
             ></v-text-field>
         </div>
         <h2 class="text-center">ALL ORDERS (unpaid)</h2>
-        <div v-for="(o, i) in getOrders()" :key="o._id">
-            <div class="contain-orders" v-show="!o.oke">
-                <h3 class="text-center">Customer information</h3>
-                <p>
-                    Date: {{ day + "/" + month[indexMonth] + "/" + year }}
-                    {{ getDate(i) }} &nbsp; &nbsp; &nbsp; Customer :
-                    {{ o.name }} &nbsp; &nbsp; &nbsp; Phone number :
-                    {{ o.phoneNumber }}
-                </p>
-                <p v-if="o.address.left_address != ''">
-                    Address:
-                    {{
-                        o.address.left_address +
-                        ", " +
-                        o.address.ward +
-                        ", " +
-                        o.address.district +
-                        " , " +
-                        o.address.province
-                    }}
-                </p>
-                <p v-else>
-                    Address:
-                    {{
-                        o.address.ward +
-                        ", " +
-                        o.address.district +
-                        " , " +
-                        o.address.province
-                    }}
-                </p>
-                <p>Email: {{ o.email }}</p>
-                <p>Note: {{ o.note }}</p>
-                <p class="title text-center">Order</p>
-                <table>
-                    <tr>
-                        <th>PRODUCT</th>
-                        <th class="text-right">SUBTOTAL</th>
-                    </tr>
-                    <tr v-for="c in o.cart" :key="c.product.slug">
-                        <td>
-                            <img :src="c.product.gallery[0]" alt="" />
-                            <span
-                                >{{ c.product.name }} x
-                                <b>{{ c.quantity }}</b></span
-                            >
-                        </td>
-                        <td class="text-right">
-                            <span class="price"
-                                >${{
-                                    (c.product.price * c.quantity)
+        <div v-if="searchArray.length == 0">
+            <div v-show="returnSearch == false" class="text-center">
+                No order found
+                <div
+                    @click="
+                        returnSearch = true;
+                        search = '';
+                    "
+                    class="btn btn-link"
+                >
+                    Back
+                </div>
+            </div>
+            <div
+                v-for="o in orders"
+                :key="o._id"
+                v-show="returnSearch == true && o.payment == false"
+            >
+                <div class="contain-orders">
+                    <h3 class="text-center">Customer information</h3>
+                    <p>
+                        Date: {{o.createdDate}} &nbsp; &nbsp; &nbsp; Customer :
+                        {{ o.name }} &nbsp; &nbsp; &nbsp; Phone number :
+                        {{ o.phoneNumber }}
+                    </p>
+                    <p v-if="o.address.left_address != ''">
+                        Address:
+                        {{
+                            o.address.left_address +
+                            ", " +
+                            o.address.ward +
+                            ", " +
+                            o.address.district +
+                            " , " +
+                            o.address.province
+                        }}
+                    </p>
+                    <p v-else>
+                        Address:
+                        {{
+                            o.address.ward +
+                            ", " +
+                            o.address.district +
+                            " , " +
+                            o.address.province
+                        }}
+                    </p>
+                    <p>Email: {{ o.email }}</p>
+                    <p>Note: {{ o.note }}</p>
+                    <p class="title text-center">Order</p>
+                    <table>
+                        <tr>
+                            <th>PRODUCT</th>
+                            <th class="text-right">SUBTOTAL</th>
+                        </tr>
+                        <tr v-for="c in o.cart" :key="c.product.slug">
+                            <td>
+                                <img :src="c.product.gallery[0]" alt="" />
+                                <span
+                                    >{{ c.product.name }} x
+                                    <b>{{ c.quantity }}</b></span
+                                >
+                            </td>
+                            <td class="text-right">
+                                <span class="price"
+                                    >${{
+                                        (c.product.price * c.quantity)
+                                            .toFixed(2)
+                                            .toString()
+                                            .replace(
+                                                /\B(?=(\d{3})+(?!\d))/g,
+                                                ","
+                                            )
+                                    }}</span
+                                >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">Total</td>
+                            <td class="text-right bold">
+                                ${{
+                                    o.total
                                         .toFixed(2)
                                         .toString()
                                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                                }}</span
-                            >
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="bold">Total</td>
-                        <td class="text-right bold">
-                            ${{
-                                o.total
-                                    .toFixed(2)
-                                    .toString()
-                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                            }}
-                        </td>
-                    </tr>
-                </table>
-                <div class="contain-btn">
-                    <button
-                        class="btn btn-success bold"
-                        v-if="o.confirm == false"
-                        @click="confirmOrder(o)"
-                    >
-                        Confirm order
-                    </button>
+                                }}
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="contain-btn">
+                        <button
+                            class="btn btn-success bold"
+                            v-if="o.confirm == false"
+                            @click="confirmOrder(o)"
+                        >
+                            Confirm order
+                        </button>
 
-                    <div v-else class="c-green">This order is confirmed</div>
+                        <div v-else class="c-green">
+                            This order is confirmed
+                        </div>
 
+                        <button
+                            class="btn btn-danger bold"
+                            @click="deleteOrder(o)"
+                            v-show="o.confirm == false"
+                        >
+                            Delete order
+                        </button>
 
-                    <button
-                        class="btn btn-danger bold"
-                        @click="deleteOrder(o)"
-                        v-show="o.confirm == false"
-                    >
-                        Delete order
-                    </button>
+                        <button
+                            class="btn btn-dark right bold"
+                            v-if="o.payment == false"
+                            @click="confirmPayment(o)"
+                        >
+                            Confirm payment
+                        </button>
+                        <div v-else class="c-green text-right">
+                            Customer paid
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-else>
+            <div v-for="o in searchArray" :key="o._id">
+                <div class="contain-orders">
+                    <h3 class="text-center">Customer information</h3>
+                    <p>
+                        Date: {{o.createdDate}} &nbsp; &nbsp; &nbsp; Customer :
+                        {{ o.name }} &nbsp; &nbsp; &nbsp; Phone number :
+                        {{ o.phoneNumber }}
+                    </p>
+                    <p v-if="o.address.left_address != ''">
+                        Address:
+                        {{
+                            o.address.left_address +
+                            ", " +
+                            o.address.ward +
+                            ", " +
+                            o.address.district +
+                            " , " +
+                            o.address.province
+                        }}
+                    </p>
+                    <p v-else>
+                        Address:
+                        {{
+                            o.address.ward +
+                            ", " +
+                            o.address.district +
+                            " , " +
+                            o.address.province
+                        }}
+                    </p>
+                    <p>Email: {{ o.email }}</p>
+                    <p>Note: {{ o.note }}</p>
+                    <p class="title text-center">Order</p>
+                    <table>
+                        <tr>
+                            <th>PRODUCT</th>
+                            <th class="text-right">SUBTOTAL</th>
+                        </tr>
+                        <tr v-for="c in o.cart" :key="c.product.slug">
+                            <td>
+                                <img :src="c.product.gallery[0]" alt="" />
+                                <span
+                                    >{{ c.product.name }} x
+                                    <b>{{ c.quantity }}</b></span
+                                >
+                            </td>
+                            <td class="text-right">
+                                <span class="price"
+                                    >${{
+                                        (c.product.price * c.quantity)
+                                            .toFixed(2)
+                                            .toString()
+                                            .replace(
+                                                /\B(?=(\d{3})+(?!\d))/g,
+                                                ","
+                                            )
+                                    }}</span
+                                >
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bold">Total</td>
+                            <td class="text-right bold">
+                                ${{
+                                    o.total
+                                        .toFixed(2)
+                                        .toString()
+                                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                }}
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="contain-btn">
+                        <button
+                            class="btn btn-success bold"
+                            v-if="o.confirm == false"
+                            @click="confirmOrder(o)"
+                        >
+                            Confirm order
+                        </button>
 
-                    <button
-                        class="btn btn-dark right bold"
-                        v-if="o.payment == false"
-                        @click="confirmPayment(o)"
-                    >
-                        Confirm payment
-                    </button>
-                    <div v-else class="c-green text-right">Customer paid</div>
+                        <div v-else class="c-green">
+                            This order is confirmed
+                        </div>
+
+                        <button
+                            class="btn btn-danger bold"
+                            @click="deleteOrder(o)"
+                            v-show="o.confirm == false"
+                        >
+                            Delete order
+                        </button>
+
+                        <button
+                            class="btn btn-dark right bold"
+                            v-if="o.payment == false"
+                            @click="confirmPayment(o)"
+                        >
+                            Confirm payment
+                        </button>
+                        <div v-else class="c-green text-right">
+                            Customer paid
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="container" v-else>
         <p style="color: red">No one to order!</p>
-        <a href="/orders-paid" class="btn btn-left btn-success"
-                >SEE ALL ORDERS(paid)</a
-            >
+        <a href="/orders" class="btn btn-success btn-left"
+            >BACK TO ALL ORDERS(unpaid)</a
+        >
     </div>
 </template>
 
@@ -135,26 +267,9 @@ export default {
     },
     data() {
         return {
-            date: "",
-            day: "",
-            month: [
-                "01",
-                "02",
-                "03",
-                "04",
-                "05",
-                "06",
-                "07",
-                "08",
-                "09",
-                "10",
-                "11",
-                "12",
-            ],
-            year: "",
-            indexMonth: "",
-            search: '',
-            newOrders: [],
+            search: "",
+            searchArray: [],
+            returnSearch: true,
         };
     },
     methods: {
@@ -172,47 +287,35 @@ export default {
             }
             return subToTal;
         },
-        getDate(index) {
-            this.date = new Date(this.orders[index].createdAt);
-            this.day = this.date.getDate();
-            this.indexMonth = this.date.getMonth();
-            this.year = this.date.getFullYear();
-            return "";
-        },
         confirmOrder(newOrder) {
             this.$store.dispatch("confirmOrder", newOrder);
-            this.$store.dispatch("loadOrders");
             setTimeout(window.location.reload(), 3000);
         },
         deleteOrder(order) {
             this.$store.dispatch("deleteOrder", order);
-            this.$store.dispatch("loadOrders");
+            alert("Order deleted successfully!")
             setTimeout(window.location.reload(), 3000);
         },
         confirmPayment(newOrder) {
             this.$store.dispatch("confirmPayment", newOrder);
-            this.$store.dispatch("loadOrders");
             setTimeout(window.location.reload(), 3000);
         },
-        getOrders() {
-            let newOrders = []
-            let orders = this.orders
-            if(this.search == '' || this.search == null) {
-                orders.forEach((order) => {
-                    if(order.payment == false) {
-                        newOrders.push(order)
-                    }
-                })
-                return newOrders
-            } else {
-                orders.forEach((order) => {
-                    if(order.email.toLowerCase().includes(this.search.toLowerCase()) && order.payment == false) {
-                        newOrders.push(order)
-                    }
-                })
-                return newOrders
+        handleSearch() {
+            this.searchArray = [];
+            for (var i = 0; i < this.orders.length; i++) {
+                if (
+                    this.orders[i].email
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase()) &&
+                    this.orders[i].payment == true
+                ) {
+                    this.searchArray.push(this.orders[i]);
+                }
             }
-        }
+            if (this.searchArray.length == 0) {
+                this.returnSearch = false;
+            }
+        },
     },
 };
 </script>
