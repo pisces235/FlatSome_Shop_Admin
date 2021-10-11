@@ -149,17 +149,18 @@ export default {
             this.year = this.date.getFullYear();
             return "";
         },
-        getOrders() {
+        async getOrders() {
             let newOrders = []
+            let orders = this.orders
             if(this.search == '' || this.search == null) {
-                this.orders.forEach((order) => {
+                orders.forEach((order) => {
                     if(order.payment == true) {
                         newOrders.push(order)
                     }
                 })
                 return newOrders
             } else {
-                this.orders.forEach((order) => {
+                orders.forEach((order) => {
                     if(order.email.toLowerCase().includes(this.search.toLowerCase()) && order.payment == true) {
                         newOrders.push(order)
                     }

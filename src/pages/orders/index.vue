@@ -196,20 +196,20 @@ export default {
         },
         getOrders() {
             let newOrders = []
+            let orders = this.orders
             if(this.search == '' || this.search == null) {
-                this.orders.forEach((order) => {
+                orders.forEach((order) => {
                     if(order.payment == false) {
                         newOrders.push(order)
                     }
                 })
                 return newOrders
             } else {
-                this.orders.forEach((order) => {
+                orders.forEach((order) => {
                     if(order.email.toLowerCase().includes(this.search.toLowerCase()) && order.payment == false) {
                         newOrders.push(order)
                     }
                 })
-                this.newOrders = newOrders
                 return newOrders
             }
         }

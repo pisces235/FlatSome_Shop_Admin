@@ -81,7 +81,6 @@
                 </tr>
             </table>
         </div>
-        {{ getOrdersPaid() }}
     </div>
 </template>
 
@@ -111,7 +110,8 @@ export default {
     methods: {
         getOrdersPaid() {
             let newOrders = [];
-            this.orders.forEach((order) => {
+            let orders = this.orders
+            orders.forEach((order) => {
                 if (
                     order.email
                         .toLowerCase()
@@ -132,12 +132,11 @@ export default {
                 }
                 return 0;
             });
-            this.newOrders = newOrders;
-            return "";
+            return newOrders;
         },
         getRevenueByDate() {
             let newOrders = [];
-            this.newOrders.forEach((index) => {
+            this.getOrdersPaid().forEach((index) => {
                 const data = newOrders.find(
                     (i) => i.date === index.paymentDate
                 );
@@ -166,7 +165,7 @@ export default {
         },
         getRevenueByMonth() {
             let newOrders = [];
-            this.newOrders.forEach((index) => {
+            this.getOrdersPaid().forEach((index) => {
                 const data = newOrders.find(
                     (i) => i.date === index.paymentDate.slice(3, 10)
                 );
@@ -198,7 +197,7 @@ export default {
         },
         getRevenueByYear() {
             let newOrders = [];
-            this.newOrders.forEach((index) => {
+            this.getOrdersPaid().forEach((index) => {
                 const data = newOrders.find(
                     (i) => i.date === index.paymentDate.slice(6, 10)
                 );
