@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid" v-if="orders.length > 0">
         <div class="contain-btn">
-            <a href="/orders" class="btn btn-success btn-left"
+            <a href="/orders-paid" class="btn btn-success btn-left"
                 >BACK TO ALL ORDERS(paid)</a
             >
             <v-text-field
