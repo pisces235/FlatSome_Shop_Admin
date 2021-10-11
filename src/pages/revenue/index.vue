@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <h1 class="title-page text-center">Revenue Page</h1>
-        <p class="all-total">Total all time: ${{getTotal(newOrders).toFixed(2)
+        <p class="all-total">Total all time: ${{getTotal(getOrdersPaid()).toFixed(2)
                                     .toString()
                                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}</p>
         <div class="contain-order">
