@@ -142,7 +142,8 @@ export default new Vuex.Store({
         },
         async restoreProduct({commit},slug) {
             try {
-                await api().patch(`/products/${slug}`);
+                let res = await api().patch(`/products/${slug}`);
+                return { message: res.data.success };
             } catch (error) {
                 return { message: error.message };
             }

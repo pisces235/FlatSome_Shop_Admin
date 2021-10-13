@@ -231,8 +231,13 @@ export default {
         },
         restoreProduct(slug) {
             if (confirm("Restore this product?")) {
-                this.$store.dispatch("restoreProduct", slug);
-                this.$router.go(0);
+                this.$store.dispatch("restoreProduct", slug).then(response => {
+                    if(response.message == true)
+                        this.$router.go(0);
+                    else {
+                        alert("Can't be restore this product, please try again later!")
+                    }
+                })
             }
         },
     },
