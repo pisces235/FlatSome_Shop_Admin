@@ -134,7 +134,8 @@ export default new Vuex.Store({
         },
         async trashProduct({commit}, slug) {
             try {
-                await api().delete(`/products/${slug}`);
+                let res = await api().delete(`/products/${slug}`);
+                return { message: res.data.success };
             } catch (error) {
                 return { message: error.message };
             }

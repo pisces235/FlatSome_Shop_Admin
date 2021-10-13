@@ -220,13 +220,20 @@ export default {
             }
         },
         deleteProduct(slug) {
+
             if (
                 confirm(
                     "Delete this product? This product will be moving to the recycle bin!"
                 )
             ) {
-                this.$store.dispatch("trashProduct", slug);
-                this.$router.go(0);
+                this.$store.dispatch("trashProduct", slug).then(response => {
+                    if(response.message == true)
+                        this.$router.go(0);
+                    else {
+                        alert("Can't be delete, please try again later!")
+                    }
+                })
+
             }
         },
     },
