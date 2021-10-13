@@ -128,10 +128,16 @@ export default {
     },
     methods: {
         handleSubmit() {
+            let categories = []
+            let cs = this.categories.split("/[^A-Za-z0-9- ]/")
+            cs.forEach(c => {
+                var result = c.charAt(0).toUpperCase() + str.slice(1)
+                categories.push(result)
+            })
             let newProduct = {
                 name: this.name,
-                categories: this.categories.trim().split(","),
                 color: this.color.trim().split(","),
+                categories: categories,
                 price: this.price,
                 sale: this.sale,
                 stock: this.stock,
