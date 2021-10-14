@@ -87,6 +87,7 @@
                                         color="primary"
                                         v-bind="attrs"
                                         v-on="on"
+                                        v-show="user.typeAccount != 'admin'"
                                         >Change password</v-btn
                                     >
                                 </template>
@@ -115,6 +116,7 @@
                             <v-btn
                                 color="red"
                                 @click="deleteProduct(product.slug)"
+                                v-show="user.typeAccount != 'admin'"
                                 >Delete</v-btn
                             >
                         </div>
